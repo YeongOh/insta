@@ -1,7 +1,9 @@
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { getFollowingPostsOf } from '@/service/posts';
 import { getServerSession } from 'next-auth';
+import { NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
+export async function GET() {
   const session = await getServerSession(authOptions);
   const user = session?.user;
 
@@ -9,5 +11,6 @@ export async function GET(request: Request) {
     return new Response('Authentication Error', { status: 401 });
   }
 
-  return new Response('Hello, Next.js!');
+  return getFollowingPostsOf(user.username) //
+    .then((data) => NextResponse.json(data));
 }
