@@ -1,6 +1,5 @@
 'use client';
 
-import { SimplePost } from './model/post';
 import { GridLoader } from 'react-spinners';
 import PostListCard from './PostListCard';
 import usePosts from '@/hooks/posts';
