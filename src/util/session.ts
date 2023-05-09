@@ -1,7 +1,10 @@
+import { AuthUser } from '@/components/model/user';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { getServerSession } from 'next-auth';
 
-export async function GET(request: Request) {
+export async function withSessionUser(
+  handler: (user: AuthUser) => Promise<Response>
+): Promise<Response> {
   const session = await getServerSession(authOptions);
   const user = session?.user;
 
@@ -9,5 +12,5 @@ export async function GET(request: Request) {
     return new Response('Authentication Error', { status: 401 });
   }
 
-  return new Response('Hello, Next.js!');
+  return handler(user);
 }

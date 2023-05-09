@@ -1,18 +1,19 @@
-import { addBookmark, removeBookmark } from '@/service/user';
+import { follow, unfollow } from '@/service/user';
 import { withSessionUser } from '@/util/session';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function PUT(req: NextRequest) {
   return withSessionUser(async (user) => {
-    const { id, bookmark } = await req.json();
+    const { id: targetId, follow: isFollowing } = await req.json();
 
-    if (!id || bookmark === undefined) {
+    console.log(targetId, isFollowing);
+    if (!targetId || isFollowing === undefined) {
       return new Response('Bad Request', { status: 400 });
     }
 
-    const request = bookmark ? addBookmark : removeBookmark;
+    const request = isFollowing ? follow : unfollow;
 
-    return request(user.id, id) //
+    return request(user.id, targetId) //
       .then((res) => NextResponse.json(res))
       .catch((error) => new Response(JSON.stringify(error), { status: 500 }));
   });
